@@ -1,6 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 const rowspace = SizedBox(width: 30);
 const rowminspace = SizedBox(
   width: 10,
 );
+const white = Colors.white;
+const black = Colors.black;

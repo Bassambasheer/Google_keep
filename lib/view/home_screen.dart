@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_keep_clone/controller.dart/home_controller.dart';
+import 'package:google_keep_clone/controller/home_controller.dart';
 import 'package:google_keep_clone/view/add_notes%20screen.dart';
+
 import 'package:google_keep_clone/widgets/common_widgets.dart';
 import 'package:google_keep_clone/widgets/grid_view.dart';
 import 'package:google_keep_clone/widgets/list_veiw_widget.dart';
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
                   duration: const Duration(milliseconds: 600),
                   reverseDuration: const Duration(milliseconds: 600),
                   type: PageTransitionType.bottomToTopJoined,
-                  child: const AddNotes(),
+                  child:  AddNotes(),
                   childCurrent: this),
             );
           },
@@ -107,7 +108,8 @@ class HomeScreen extends StatelessWidget {
                     return Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                          },
                           icon: const Icon(Icons.menu),
                           splashRadius: 25,
                         ),

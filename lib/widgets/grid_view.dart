@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:google_keep_clone/widgets/common_widgets.dart';
+import 'package:google_keep_clone/models/note_model.dart';
+import 'package:google_keep_clone/widgets/view_card.dart';
 
 class GridViewWidget extends StatelessWidget {
-  const GridViewWidget({Key? key}) : super(key: key);
+  const GridViewWidget({required this.data, Key? key}) : super(key: key);
+  final List<Note>? data;
 
   @override
   Widget build(BuildContext context) {
@@ -12,23 +14,12 @@ class GridViewWidget extends StatelessWidget {
       crossAxisCount: 2,
       mainAxisSpacing: 4,
       crossAxisSpacing: 4,
-      itemCount: 10,
+      itemCount: data?.length??0,
       itemBuilder: (context, index) {
-        return  Card(
-           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-                side: const BorderSide(
-                  color: Colors.grey,
-                  width: 0.9
-                )
-              ),
-          borderOnForeground: false,
-          shadowColor: black,
-          
-            child: const ListTile(
-          title: Text("title"),
-          subtitle: Text("body"),
-        ));
+        return  ViewCard(
+          title: data?[index].title,
+          description: data?[index].description,
+        );
       },
     ));
   }

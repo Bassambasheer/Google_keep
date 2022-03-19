@@ -23,6 +23,52 @@ class _AddNotesState extends State<AddNotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: Container(
+            width: double.infinity,
+            height: 40,
+            color: Colors.grey[100],
+            child: BottomAppBar(
+              color: const Color(0xFFFFFFFF),
+              shape: const AutomaticNotchedShape(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(0),
+                  ),
+                ),
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(22),
+                  ),
+                ),
+              ),
+              notchMargin: 4.5,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.add_box_outlined),
+                    onPressed: () {},
+                  ),
+                  rowminspace,
+                  IconButton(
+                    icon: const Icon(Icons.color_lens_outlined),
+                    onPressed: () {},
+                  ),
+                  const SizedBox(
+                    width: 45,
+                  ),
+                  Text("Edited ${DateTime.now().hour}:${DateTime.now().minute}"),
+                   const SizedBox(
+                    width: 115,
+                  ),
+                   IconButton(
+                    icon: const Icon(Icons.more_vert_sharp),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            )),
         backgroundColor: white,
         appBar: AppBar(
           shadowColor: white,
@@ -85,7 +131,7 @@ class _AddNotesState extends State<AddNotes> {
         descriptioncontroller.text.trim().isEmpty) {
       return;
     } else {
-     await FirebaseApi.createNote(note);
+      await FirebaseApi.createNote(note);
     }
   }
 }

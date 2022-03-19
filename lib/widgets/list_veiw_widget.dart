@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:google_keep_clone/widgets/common_widgets.dart';
+import 'package:google_keep_clone/models/note_model.dart';
+import 'package:google_keep_clone/widgets/view_card.dart';
 
 class ListViewWidget extends StatelessWidget {
-  const ListViewWidget({Key? key}) : super(key: key);
-
+  const ListViewWidget({required this.data, Key? key}) : super(key: key);
+  final List<Note>? data;
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
           itemBuilder: (context, index) {
-            return  Padding(
-              padding: const EdgeInsets.all(1),
-              child: Card(
-              shape: RoundedRectangleBorder(
-                   borderRadius: BorderRadius.circular(10),
-                   side: const BorderSide(
-                  color: Colors.grey,
-                  width: 0.9
-                )
-              ),
-                child: const ListTile(
-                  title: Text("title"),
-                  subtitle: Text("body"),
-                ),
-              ),
+            return  ViewCard(
+                title: data?[index].title,
+          description: data?[index].description,
             );
           },
-          itemCount: 10),
+          itemCount:  data?.length??0),
     );
   }
 }

@@ -8,4 +8,10 @@ class FirebaseApi {
     await docnote.set(note.toJson());
     return docnote.id;
   }
+
+  static Stream<List<Note>> getNote() => 
+  FirebaseFirestore.instance.collection('note')
+      .snapshots()
+      .map((event) => event.docs.map((json) =>
+       Note.fromJson(json.data())).toList());
 }

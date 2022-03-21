@@ -19,6 +19,8 @@ class GridViewWidget extends StatelessWidget {
         return  ViewCard(
           title: data?[index].title,
           description: data?[index].description,
+            id: data?[index].id,
+            time: data?[index].createdTime,
         );
       },
     ));

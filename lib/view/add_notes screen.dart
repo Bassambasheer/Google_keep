@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_keep_clone/api/firebase_api.dart';
 import 'package:google_keep_clone/models/note_model.dart';
+import 'package:google_keep_clone/view/home_screen.dart';
 import 'package:google_keep_clone/widgets/common_widgets.dart';
 
 class AddNotes extends StatefulWidget {
-  AddNotes({Key? key}) : super(key: key);
+  const AddNotes(
+      {this.id,
+      this.title,
+      this.description,
+      this.time,
+      this.isedit = false,
+      Key? key})
+      : super(key: key);
+  final String? title;
+  final String? description;
+  final String? id;
+  final DateTime? time;
+  final bool isedit;
 
   @override
   State<AddNotes> createState() => _AddNotesState();
@@ -16,12 +29,18 @@ class _AddNotesState extends State<AddNotes> {
   TextEditingController descriptioncontroller = TextEditingController();
   @override
   void dispose() {
-    addnote();
+    widget.isedit == true ? editNote() : addnote();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.title != null) {
+      titlecontroller.text = widget.title.toString();
+    }
+    if (widget.description != null) {
+      descriptioncontroller.text = widget.description.toString();
+    }
     return Scaffold(
         bottomNavigationBar: Container(
             width: double.infinity,
@@ -58,13 +77,36 @@ class _AddNotesState extends State<AddNotes> {
                   const SizedBox(
                     width: 45,
                   ),
-                  Text("Edited ${DateTime.now().hour}:${DateTime.now().minute}"),
-                   const SizedBox(
-                    width: 115,
-                  ),
-                   IconButton(
+                  Text(widget.time == null
+                      ? "Edited ${DateTime.now().hour}:${DateTime.now().minute}"
+                      : "Last edited ${widget.time!.hour}:${widget.time!.minute}"),
+                  widget.time != null
+                      ? const SizedBox(
+                          width: 85,
+                        )
+                      : const SizedBox(width: 115),
+                  IconButton(
                     icon: const Icon(Icons.more_vert_sharp),
-                    onPressed: () {},
+                    onPressed: () {
+                      widget.id != null
+                          ? showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Wrap(
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        FirebaseApi.deleteNote(widget.id!);
+                                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) => const HomeScreen())), (route) => false);
+                                      },
+                                      leading: Icon(Icons.delete),
+                                      title: Text('delete'),
+                                    ),
+                                  ],
+                                );
+                              })
+                          : null;
+                    },
                   ),
                 ],
               ),
@@ -132,6 +174,20 @@ class _AddNotesState extends State<AddNotes> {
       return;
     } else {
       await FirebaseApi.createNote(note);
+    }
+  }
+
+  editNote() async {
+    Note note = Note(
+        title: titlecontroller.text.trim(),
+        description: descriptioncontroller.text.trim(),
+        id: widget.id,
+        createdTime: DateTime.now());
+    if (titlecontroller.text.trim().isEmpty &&
+        descriptioncontroller.text.trim().isEmpty) {
+      return;
+    } else {
+      await FirebaseApi.updateNote(note);
     }
   }
 }

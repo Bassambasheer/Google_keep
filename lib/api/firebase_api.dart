@@ -9,9 +9,17 @@ class FirebaseApi {
     return docnote.id;
   }
 
-  static Stream<List<Note>> getNote() => 
-  FirebaseFirestore.instance.collection('note')
-      .snapshots()
-      .map((event) => event.docs.map((json) =>
-       Note.fromJson(json.data())).toList());
+  static Stream<List<Note>> getNote() =>
+      FirebaseFirestore.instance.collection('note').snapshots().map((event) =>
+          event.docs.map((json) => Note.fromJson(json.data())).toList());
+
+  static Future updateNote(Note note) async {
+    final docnote = FirebaseFirestore.instance.collection('note').doc(note.id);
+    await docnote.update(note.toJson());
+  }
+
+  static Future deleteNote(String id) async {
+    final docnote = FirebaseFirestore.instance.collection('note').doc(id);
+    await docnote.delete();
+  }
 }

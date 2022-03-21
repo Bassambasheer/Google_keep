@@ -9,7 +9,6 @@ class ViewCard extends StatelessWidget {
   final String? description;
   final String? id;
   final DateTime? time;
-
   @override
   Widget build(BuildContext context) {
     return Padding(

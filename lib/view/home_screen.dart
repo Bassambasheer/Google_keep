@@ -4,7 +4,7 @@ import 'package:google_keep_clone/api/firebase_api.dart';
 import 'package:google_keep_clone/controller/home_controller.dart';
 import 'package:google_keep_clone/models/note_model.dart';
 import 'package:google_keep_clone/view/add_notes%20screen.dart';
-
+import 'package:google_keep_clone/view/search_screen.dart';
 import 'package:google_keep_clone/widgets/common_widgets.dart';
 import 'package:google_keep_clone/widgets/grid_view.dart';
 import 'package:google_keep_clone/widgets/list_veiw_widget.dart';
@@ -17,11 +17,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
     return Scaffold(
-        drawer: Drawer(
-          child: Column(
-            children: [Text("hey")],
-          ),
-        ),
         backgroundColor: Colors.white,
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
@@ -37,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                   duration: const Duration(milliseconds: 600),
                   reverseDuration: const Duration(milliseconds: 600),
                   type: PageTransitionType.bottomToTopJoined,
-                  child:  AddNotes(),
+                  child: const AddNotes(),
                   childCurrent: this),
             );
           },
@@ -98,66 +93,72 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10,bottom: 15),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.grey[100],
-                  ),
-                  width: double.infinity,
-                  height: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: GetBuilder<HomeController>(builder: (ctrl) {
-                      return Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                            },
-                            icon: const Icon(Icons.menu),
-                            splashRadius: 25,
-                          ),
-                          Text(
-                            "Search your notes",
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.grey[800]),
-                          ),
-                          const SizedBox(width: 60),
-                          ctrl.veiwtype == false
-                              ? IconButton(
-                                  onPressed: () {
-                                    ctrl.viewtrue();
-                                  },
-                                  icon: const Icon(
-                                    Icons.grid_view_outlined,
-                                  ))
-                              : IconButton(
-                                  onPressed: () {
-                                    ctrl.viewfalse();
-                                  },
-                                  icon: const Icon(Icons.view_agenda_outlined),
-                                  splashRadius: 25,
-                                ),
-                          rowminspace,
-                          const CircleAvatar(
-                            radius: 15,
-                          ),
-                        ],
-                      );
-                    }),
+                padding: const EdgeInsets.only(top: 10, bottom: 15),
+                child: GestureDetector(
+                  onTap: (() {
+                    Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const SearchScreen(isSearch: true,)));
+                  }),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.grey[100],
+                    ),
+                    width: double.infinity,
+                    height: 50,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: GetBuilder<HomeController>(builder: (ctrl) {
+                        return Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.menu),
+                              splashRadius: 25,
+                            ),
+                            Text(
+                              "Search your notes",
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[800]),
+                            ),
+                            const SizedBox(width: 60),
+                            ctrl.veiwtype == false
+                                ? IconButton(
+                                    onPressed: () {
+                                      ctrl.viewtrue();
+                                    },
+                                    icon: const Icon(
+                                      Icons.grid_view_outlined,
+                                    ))
+                                : IconButton(
+                                    onPressed: () {
+                                      ctrl.viewfalse();
+                                    },
+                                    icon: const Icon(Icons.view_agenda_outlined),
+                                    splashRadius: 25,
+                                  ),
+                            rowminspace,
+                            const CircleAvatar(
+                              radius: 15,
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ),
-              StreamBuilder<List<Note>>(      
-                stream: FirebaseApi.getNote(),  
-                builder:(context, AsyncSnapshot<List<Note>> snapshot) {
-                  return GetBuilder<HomeController>(builder: (ctrl) {
-                    return ctrl.veiwtype == true
-                        ?  GridViewWidget(data: snapshot.data,)
-                        :  ListViewWidget(data: snapshot.data);
-                  });
-                }
-              )
+              StreamBuilder<List<Note>>(
+                  stream: FirebaseApi.getNote(),
+                  builder: (context, AsyncSnapshot<List<Note>> snapshot) {
+                    return GetBuilder<HomeController>(builder: (ctrl) {
+                      return ctrl.veiwtype == true
+                          ? GridViewWidget(
+                              data: snapshot.data,
+                            )
+                          : ListViewWidget(data: snapshot.data);
+                    });
+                  })
             ],
           ),
         )));

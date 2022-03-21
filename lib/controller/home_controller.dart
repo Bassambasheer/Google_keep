@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class HomeController extends GetxController {
@@ -12,8 +13,16 @@ class HomeController extends GetxController {
     veiwtype = true;
     update();
   }
-    viewfalse() {
+
+  viewfalse() {
     veiwtype = false;
     update();
   }
+
+  valueassign(String value) {
+    searchtext.value = value;
+    update();
+  }
 }
+
+RxString searchtext = ''.obs;

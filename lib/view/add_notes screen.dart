@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_keep_clone/api/firebase_api.dart';
 import 'package:google_keep_clone/models/note_model.dart';
@@ -72,7 +74,9 @@ class _AddNotesState extends State<AddNotes> {
                   rowminspace,
                   IconButton(
                     icon: const Icon(Icons.color_lens_outlined),
-                    onPressed: () {},
+                    onPressed: () {
+                      ColorPicker(onColorChanged: (value) => log(value.toString()),).showPickerDialog(context);
+                    },
                   ),
                   const SizedBox(
                     width: 45,
@@ -97,7 +101,12 @@ class _AddNotesState extends State<AddNotes> {
                                     ListTile(
                                       onTap: () {
                                         FirebaseApi.deleteNote(widget.id!);
-                                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: ((context) => const HomeScreen())), (route) => false);
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: ((context) =>
+                                                     HomeScreen())),
+                                            (route) => false);
                                       },
                                       leading: Icon(Icons.delete),
                                       title: Text('delete'),
@@ -111,7 +120,7 @@ class _AddNotesState extends State<AddNotes> {
                 ],
               ),
             )),
-        backgroundColor: white,
+        backgroundColor:  white,
         appBar: AppBar(
           shadowColor: white,
           backgroundColor: white,

@@ -4,15 +4,19 @@ import 'package:google_keep_clone/api/firebase_api.dart';
 import 'package:google_keep_clone/controller/home_controller.dart';
 import 'package:google_keep_clone/models/note_model.dart';
 import 'package:google_keep_clone/view/add_notes%20screen.dart';
+import 'package:google_keep_clone/view/login_screen.dart';
 import 'package:google_keep_clone/view/search_screen.dart';
 import 'package:google_keep_clone/widgets/common_widgets.dart';
 import 'package:google_keep_clone/widgets/grid_view.dart';
 import 'package:google_keep_clone/widgets/list_veiw_widget.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
+  HomeScreen({Key? key}) : super(key: key);
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
@@ -82,7 +86,9 @@ class HomeScreen extends StatelessWidget {
                   rowminspace,
                   IconButton(
                     icon: const Icon(Icons.photo_size_select_actual_outlined),
-                    onPressed: () {},
+                    onPressed: () {
+                      ImagePicker().pickImage(source: ImageSource.gallery);
+                    },
                   ),
                 ],
               ),
@@ -97,7 +103,9 @@ class HomeScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: (() {
                     Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (ctx) => const SearchScreen(isSearch: true,)));
+                        builder: (ctx) => const SearchScreen(
+                              isSearch: true,
+                            )));
                   }),
                   child: Container(
                     decoration: BoxDecoration(
@@ -111,11 +119,12 @@ class HomeScreen extends StatelessWidget {
                       child: GetBuilder<HomeController>(builder: (ctrl) {
                         return Row(
                           children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.menu),
-                              splashRadius: 25,
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(user!.photoUrl!),
+                              radius: 15,
                             ),
+                            rowminspace,
+                            rowminspace,
                             Text(
                               "Search your notes",
                               style: TextStyle(
@@ -134,12 +143,25 @@ class HomeScreen extends StatelessWidget {
                                     onPressed: () {
                                       ctrl.viewfalse();
                                     },
-                                    icon: const Icon(Icons.view_agenda_outlined),
+                                    icon:
+                                        const Icon(Icons.view_agenda_outlined),
                                     splashRadius: 25,
                                   ),
                             rowminspace,
-                            const CircleAvatar(
-                              radius: 15,
+                            IconButton(
+                              onPressed: () async {
+                                user = null;
+                                final _sharedprefs =
+                                    await SharedPreferences.getInstance();
+                                _sharedprefs.clear();
+                                await googleSignIn.signOut();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (ctx) => LoginInScreen()),
+                                    (route) => false);
+                              },
+                              icon: const Icon(Icons.logout),
+                              splashRadius: 25,
                             ),
                           ],
                         );
